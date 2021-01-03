@@ -1,0 +1,459 @@
+### 121. 买卖股票的最佳时机
+
+给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+如果你最多只允许完成一笔交易（即买入和卖出一支股票一次），设计一个算法来计算你所能获取的最大利润。
+
+注意：你不能在买入股票前卖出股票。
+
+示例 1:
+
+输入: [7,1,5,3,6,4]
+输出: 5
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+     注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。
+
+示例 2:
+
+输入: [7,6,4,3,1]
+输出: 0
+解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
+
+class Solution {
+    public int maxProfit(int[] prices) {
+//利润
+int max = 0;
+int temp = 0;
+
+for (int i = 0; i <= prices.length; i++) {
+    //后一天与前一天的差值
+   int a = prices[i + 1] - prices[i];
+    temp += a;
+    if (temp < 0) {
+        temp = 0;
+    }
+    if (temp > max) {
+        max = temp;
+    }
+}
+return max;
+
+    }}
+
+### 70. 爬楼梯
+
+假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+
+每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+
+注意：给定 n 是一个正整数。
+
+示例 1：
+
+输入： 2
+输出： 2
+解释： 有两种方法可以爬到楼顶。
+1.  1 阶 + 1 阶
+2.  2 阶
+
+
+示例 2：
+
+输入： 3
+输出： 3
+解释： 有三种方法可以爬到楼顶。
+1.  1 阶 + 1 阶 + 1 阶
+2.  1 阶 + 2 阶
+3.  2 阶 + 1 阶
+package lesson03;
+/*
+假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+        每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+        注意：给定 n 是一个正整数。
+       */
+//斐波那契数列
+public class Demo02 {
+  public static void main(String[] args) {
+    Solution02 solution = new Solution02();
+    System.out.println(solution.climbStairs(7));
+  }
+}
+class Solution02 {
+    public int climbStairs(int n) {
+        if (n == 1) return 1;
+        int a = 1;
+        int b = 2;
+        int c;
+        for (int i=3;i<=n;++i){
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        return b;
+    }
+}
+
+
+### 543. 二叉树的直径
+给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过也可能不穿过根结点。
+
+示例 :
+给定二叉树
+          1
+         / \
+        2   3
+       / \     
+      4   5    
+
+返回 3, 它的长度是路径 [4,2,1,3] 或者 [5,2,1,3]。
+
+注意：两结点之间的路径长度是以它们之间边的数目表示。
+
+public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+class Solution {
+    int max = 0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        depth(root);
+        return max;
+
+    }
+
+    public int depth(TreeNode node) {
+        if (node == null)
+            return 0;
+        //左儿子为根的子树的深度
+        int Left = depth(node.left);
+        //右儿子为根的子树的深度
+        int Right = depth(node.right);
+        //将左子树深度和右子树深度与当前最大值比较取大者
+        max = Math.max(Left+Right,max);
+        //返回节点深度
+        return Math.max(Left,Right)+1;
+    }
+}
+
+### 461. 汉明距离
+
+两个整数之间的汉明距离指的是这两个数字对应二进制位不同的位置的数目。
+
+ 
+注意：
+0 ≤ x, y < 2^31.
+
+示例:
+
+输入: x = 1, y = 4
+
+输出: 2
+
+解释:
+1   (0 0 0 1)
+4   (0 1 0 0)
+       ↑   ↑
+
+上面的箭头指出了对应二进制位不同的位置。
+
+package lesson03;
+
+public class Demo03 {
+  public static void main(String[] args) {
+    Solution03 solution03 = new Solution03();
+    System.out.println(solution03.hammingDistance(1,9)); // 1
+  }
+}
+class Solution03{
+    public int hammingDistance(int x,int y){
+        //将x，y的二进制形式用数组保存
+        int n = 0;
+        int[] xa = getT(x);
+        int[] ya = getT(y);
+    for (int i = 0; i < 32; i++) {
+      if (xa[i] != ya[i]){
+          n++;
+      }
+    }
+    return n;
+    }
+    //转化二进制形式
+    public int[] getT(int x){
+        int[] er = new int[32];
+        int count = 31;
+        int ys = 0;//余数
+        while (x != 0){
+            ys = x%2;
+            x = x/2;
+            er[count--] = ys;
+        }
+        return er;
+
+    }
+}
+
+
+### 198. 打家劫舍
+
+你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+
+给定一个代表每个房屋存放金额的非负整数数组，计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+ 
+示例 1：
+
+输入：[1,2,3,1]
+输出：4
+解释：偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。
+     偷窃到的最高金额 = 1 + 3 = 4 。
+示例 2：
+
+输入：[2,7,9,3,1]
+输出：12
+解释：偷窃 1 号房屋 (金额 = 2), 偷窃 3 号房屋 (金额 = 9)，接着偷窃 5 号房屋 (金额 = 1)。
+     偷窃到的最高金额 = 2 + 9 + 1 = 12 。
+ 
+
+提示：
+
+package lesson03;
+/*
+递归方法
+ */
+public class Demo04 {
+  public static void main(String[] args) {
+    Solution04 solution04 = new Solution04();
+    int[] nums = {7,6,8,2,9};
+    System.out.println(solution04.rob(nums));
+    //24
+  }
+}
+//0 <= nums.length <= 100
+//0 <= nums[i] <= 400
+
+class Solution04 {
+    public int rob(int[] nums) {
+        return dg(nums,nums.length-1);
+
+    }
+
+    public int dg(int[] nums,int i){
+        if (nums.length == 0)
+            return 0;
+        if (i == 0)
+            return nums[i];
+        if (i == 1){
+            return Math.max(nums[i-1],nums[i]);
+        }else {
+            int a = dg(nums,i-2)+nums[i];
+            int b = dg(nums,i-1);
+            return Math.max(a,b);
+        }
+    }
+}
+
+### 226. 翻转二叉树
+
+翻转一棵二叉树。
+
+示例：
+
+输入：
+
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+输出：
+
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+
+
+public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+class Solution06{
+    public TreeNode invertTree(TreeNode root) {
+       if (root!=null){
+           invertTreeNode(root);
+       }
+       //root为根节点
+       return root;
+    }
+    public void invertTreeNode(TreeNode root){
+        if (root!=null){
+            //root.left,root.right先进行互换
+            TreeNode temp = root.right;
+            root.left = root.right;
+            root.right = temp;
+            //分别把root.left,root.right作为根节点
+            //递归
+            invertTree(root.left);
+            invertTree(root.right);
+        }
+    }
+}
+
+
+### 160. 相交链表
+
+编写一个程序，找到两个单链表相交的起始节点。
+
+注意：
+
+如果两个链表没有交点，返回 null.
+在返回结果后，两个链表仍须保持原有的结构。
+可假定整个链表结构中没有循环。
+程序尽量满足 O(n) 时间复杂度，且仅用 O(1) 内存。
+
+
+public class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int x) {
+        val = x;
+        next = null;
+    }
+}
+
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA==null||headB==null){
+            return null;
+        }
+        int lenA = 0;
+        int lenB = 0;
+        ListNode pL = headA;
+        ListNode pR =headB;
+        while (pL!=null){
+            lenA++;
+            pL=pL.next;
+        }
+        while (pR!=null){
+            lenB++;
+            pR=pR.next;
+        }
+        pL=headA;
+        pR=headB;
+        int len = lenA=lenB;
+        if (len<0){
+            pL=headB;
+            pR=headA;
+            len=lenB-lenA;
+        }
+        while (len>0){
+            pL=pL.next;
+            len--;
+        }
+        while (pL!=null&&pR!=null&&pL!=pR){
+            pL=pL.next;
+            pR=pR.next;
+        }
+        while (pL!=null&&pR!=null&&pL==pR){
+            return pL;
+        }
+        return null;
+    }
+}
+
+### 141. 环形链表
+
+给定一个链表，判断链表中是否有环。
+
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+
+如果链表中存在环，则返回 true 。 否则，返回 false 。
+
+ 
+
+进阶：
+
+你能用 O(1)（即，常量）内存解决此问题吗？
+
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int x) {
+        val = x;
+        next = null;
+    }
+}
+
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        
+    }
+}
+
+### 20. 有效的括号
+
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+
+有效字符串需满足：
+
+左括号必须用相同类型的右括号闭合。
+左括号必须以正确的顺序闭合。
+注意空字符串可被认为是有效字符串。
+
+示例 1:
+
+输入: "()"
+输出: true
+示例 2:
+
+输入: "()[]{}"
+输出: true
+示例 3:
+
+输入: "(]"
+输出: false
+示例 4:
+
+输入: "([)]"
+输出: false
+示例 5:
+
+输入: "{[]}"
+输出: true
+
+package lesson03;
+
+public class Demo05 {
+  public static void main(String[] args) {
+    Solution05 solution05 = new Solution05();
+    String s1 = "{}[]()(";
+    String s2 = "{}[]()";
+    System.out.println(solution05.isValid(s1));//false
+    System.out.println(solution05.isValid(s2));//true
+
+  }
+}
+class Solution05 {
+    public boolean isValid(String s) {
+        if (s.length()<2||s.length()%2!=0)
+            return false;
+    int count = 0;
+    //将(){}[]都换掉，判断是否有剩余
+    while (count<s.length()/2){
+        s = s.replace("{}","").replace("[]","").replace("()","");
+        count ++;
+
+    }
+    if (s.length() > 0) {
+      return false;
+    } else {
+      return true;
+     }
+    }
+}
